@@ -1,78 +1,74 @@
 const choices = ["rock", "paper", "scissors"];
 
+const playerTotalArea = document.querySelector(".totals-player span");
+let playerTotal = playerTotalArea.textContent;
+const computerTotalArea = document.querySelector(".totals-computer span");
+let computerTotal = computerTotalArea.textContent;
+const buttons = document.querySelectorAll("button");
+const outcomeArea = document.querySelector(".outcomeArea");
+
 function getComputerChoice() {
 	return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function getPlayerChoice() {
-	let playerChoice;
-	while (!playerChoice) {
-		playerChoice = prompt("Please input rock, paper, or scissors!");
-		playerChoice = playerChoice.toLowerCase();
-		if (!choices.includes(playerChoice)) {
-			playerChoice = "";
-			alert("Invalid input. Please try again!");
-		}
-	}
-	return playerChoice;
-}
-
-function playRound(playerChoice, computerChoice) {
-	switch (playerChoice === "rock") {
-		case computerChoice === "rock":
-			return "Tie";
-		case computerChoice === "paper":
-			return "Lost";
-		case computerChoice === "scissors":
-			return "Won";
-	}
-	switch (playerChoice === "paper") {
-		case computerChoice === "rock":
-			return "Won";
-		case computerChoice === "paper":
-			return "Tie";
-		case computerChoice === "scissors":
-			return "Lost";
-	}
-	switch (playerChoice === "scissors") {
-		case computerChoice === "rock":
-			return "Lost";
-		case computerChoice === "paper":
-			return "Won";
-		case computerChoice === "scissors":
-			return "Tie";
+function determineWinner(playerChoice, computerChoice) {
+	switch (playerChoice) {
+		case "rock":
+			switch (computerChoice) {
+				case "rock":
+					return "Tie";
+				case "paper":
+					return "Lose";
+				case "scissors":
+					return "Win";
+			}
+			break;
+		case "paper":
+			switch (computerChoice) {
+				case "rock":
+					return "Win";
+				case "paper":
+					return "Tie";
+				case "scissors":
+					return "Lose";
+			}
+			break;
+		case "scissors":
+			switch (computerChoice) {
+				case "rock":
+					return "Lose";
+				case "paper":
+					return "Win";
+				case "scissors":
+					return "Tie";
+			}
 	}
 }
 
-function game() {
-	let playerWins = 0;
-	let computerWins = 0;
-	let ties = 0;
-	for (let i = 0; i < 5; i++) {
-		let computerChoice = getComputerChoice();
-		let playerChoice = getPlayerChoice();
-		let outcome = playRound(playerChoice, computerChoice);
-		console.log(outcome);
-
-		if (outcome === "Tie") ties++;
-		else if (outcome === "Won") playerWins++;
-		else if (outcome === "Lost") computerWins++;
+function playRound(playerChoice) {
+	let outcome = determineWinner(playerChoice, getComputerChoice());
+	outcomeArea.textContent = outcome;
+	if (outcome === "Win") {
+		playerTotal++;
+		playerTotalArea.textContent = playerTotal;
+	} else if (outcome === "Lose") {
+		computerTotal++;
+		computerTotalArea.textContent = computerTotal;
 	}
 
-	if (playerWins === computerWins) {
-		console.log(
-			`Nobody won, because you and computer tied at ${playerWins} \
-win${playerWins === 1 ? "" : "s"}!`
-		);
-	} else {
-		console.log(
-			`${
-				playerWins > computerWins ? "You" : "The computer"
-			} won overall, \
-because you had ${playerWins} win${playerWins === 1 ? "" : "s"}, \
-while the computer had ${computerWins} win${computerWins === 1 ? "" : "s"}!`
-		);
-	}
+	if (playerTotal === 5 || computerTotal === 5) endGame();
 }
 
-game();
+function endGame() {
+	outcomeArea.textContent = `You ${
+		playerTotal === 5 ? "won" : "lost"
+	} the game!`;
+	buttons.forEach((button) => {
+		button.toggleAttribute("disabled");
+	});
+}
+
+buttons.forEach((button) => {
+	let playerChoice = button.getAttribute("data-choice");
+	button.addEventListener("click", (_e) => playRound(playerChoice));
+});
