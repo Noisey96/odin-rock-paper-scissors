@@ -1,6 +1,6 @@
 # odin-rock-paper-scissors
 
-My version of TOP's Project: Rock Paper Scissors. You can find the directions I followed to create the basic HTML, CSS, and JavaScript [here](https://www.theodinproject.com/lessons/foundations-rock-paper-scissors)
+My version of TOP's Project: Rock Paper Scissors. You can find the directions I followed to create the basic HTML, CSS, and JavaScript [here](https://www.theodinproject.com/lessons/foundations-rock-paper-scissors)!
 
 ## What?
 
